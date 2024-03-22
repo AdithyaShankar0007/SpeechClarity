@@ -1,4 +1,6 @@
-pydub==0.25.1
-noisereduce==1.1.0
-SpeechRecognition==3.8.1
+streamlit
+pydub
+noisereduce
+speech_recognition
 googletrans==4.0.0-rc1
+ffmpeg==1.4
