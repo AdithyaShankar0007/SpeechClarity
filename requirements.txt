@@ -1,5 +1,5 @@
 streamlit
-pydub==0.25.1
+pydub==0.24.1
 noisereduce
 SpeechRecognition==3.8.1
 googletrans==4.0.0-rc1
