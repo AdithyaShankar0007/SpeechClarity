@@ -6,3 +6,4 @@ googletrans==4.0.0-rc1
 ffmpeg==1.4
 sounddevice==0.4.1
 pyaudio==0.2.11
+portaudio==19.6.0.1
