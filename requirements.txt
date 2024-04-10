@@ -5,3 +5,4 @@ SpeechRecognition==3.8.1
 googletrans==4.0.0-rc1
 sounddevice==0.4.1
 soundfile
+ffmpeg-python
