@@ -2,9 +2,9 @@ import streamlit as st
 from backend import recognize_speech
 from googletrans import Translator
 import tempfile
+import soundfile as sf
 import sounddevice as sd
 import numpy as np
-from scipy.io.wavfile import write
 
 def record_audio(file_path, duration=5):
     fs = 44100
@@ -15,7 +15,7 @@ def record_audio(file_path, duration=5):
     sd.wait()
 
     st.info("Finished recording")
-    write(file_path, fs, my_recording)
+    sf.write(file_path, my_recording, fs)
 
 def main():
     st.title("Speech Recognition and Translation App")
@@ -92,4 +92,3 @@ def main():
 
 if __name__ == "__main__":
     main()
- 
