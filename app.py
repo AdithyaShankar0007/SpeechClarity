@@ -29,6 +29,11 @@ def main():
         # Button to trigger transcription
         if st.button("Transcribe"):
             try:
+                # Debug: Print information about the uploaded file
+                st.write(f"Uploaded file name: {uploaded_file.name}")
+                st.write(f"Uploaded file type: {uploaded_file.type}")
+                st.write(f"Uploaded file size: {uploaded_file.size} bytes")
+
                 # Call the backend function with selected language
                 recognized_text = recognize_speech("temp_audio.wav", language=language.lower())
                 st.session_state.recognized_text = recognized_text
