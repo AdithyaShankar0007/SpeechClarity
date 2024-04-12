@@ -1,5 +1,5 @@
 import streamlit as st
-import os
+import numpy as np
 from backend import recognize_speech
 from googletrans import Translator
 
@@ -17,20 +17,11 @@ def main():
 
     if uploaded_file is not None:
         # Save the uploaded file to a temporary location
-        with open("temp_audio", "wb") as f:
+        with open("temp_audio.wav", "wb") as f:
             f.write(uploaded_file.read())
 
-        # Determine file format
-        file_extension = os.path.splitext(uploaded_file.name)[-1].lower()
-
-        # Convert uploaded file to PCM WAV format
-        if file_extension == ".flac":
-            converted_audio_file = convert_to_pcm_wav("temp_audio")
-        else:
-            converted_audio_file = "temp_audio"
-
         # Display the uploaded audio file
-        st.audio(converted_audio_file, format="audio/wav")
+        st.audio("temp_audio.wav", format="audio/wav")
 
         # Language selection dropdown with options for different languages
         language = st.selectbox("Select language", ["Hindi", "Malayalam", "English", "Tamil"])
@@ -39,7 +30,7 @@ def main():
         if st.button("Transcribe"):
             try:
                 # Call the backend function with selected language
-                recognized_text = recognize_speech(converted_audio_file, language=language.lower())
+                recognized_text = recognize_speech("temp_audio.wav", language=language.lower())
                 st.session_state.recognized_text = recognized_text
             except Exception as e:
                 st.error(f"Error during transcription: {e}")  # Display error message
