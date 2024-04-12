@@ -1,13 +1,13 @@
 import streamlit as st
+import os
 from backend import recognize_speech
 from googletrans import Translator
-import wave
 
 def main():
     st.title("Speech Recognition and Translation App")
 
     # File uploader widget
-    uploaded_file = st.file_uploader("Upload audio file", type=['wav', 'mp3','flac'])
+    uploaded_file = st.file_uploader("Upload audio file", type=['wav', 'mp3', 'flac'])
 
     # Initialize session state
     if 'recognized_text' not in st.session_state:
@@ -17,11 +17,20 @@ def main():
 
     if uploaded_file is not None:
         # Save the uploaded file to a temporary location
-        with open("temp_audio.wav", "wb") as f:
+        with open("temp_audio", "wb") as f:
             f.write(uploaded_file.read())
 
+        # Determine file format
+        file_extension = os.path.splitext(uploaded_file.name)[-1].lower()
+
+        # Convert uploaded file to PCM WAV format
+        if file_extension == ".flac":
+            converted_audio_file = convert_to_pcm_wav("temp_audio")
+        else:
+            converted_audio_file = "temp_audio"
+
         # Display the uploaded audio file
-        st.audio("temp_audio.wav", format="audio/wav")
+        st.audio(converted_audio_file, format="audio/wav")
 
         # Language selection dropdown with options for different languages
         language = st.selectbox("Select language", ["Hindi", "Malayalam", "English", "Tamil"])
@@ -30,7 +39,7 @@ def main():
         if st.button("Transcribe"):
             try:
                 # Call the backend function with selected language
-                recognized_text = recognize_speech("temp_audio.wav", language=language.lower())
+                recognized_text = recognize_speech(converted_audio_file, language=language.lower())
                 st.session_state.recognized_text = recognized_text
             except Exception as e:
                 st.error(f"Error during transcription: {e}")  # Display error message
@@ -59,20 +68,6 @@ def main():
     if st.session_state.translated_text is not None:
         st.subheader("Translated Text:")
         st.write(st.session_state.translated_text)
-
-    # Debug: Inspect audio file properties using wave module
-    if uploaded_file is not None:
-        try:
-            with wave.open("temp_audio.wav", "rb") as wav_file:
-                params = wav_file.getparams()
-                st.subheader("Audio File Properties:")
-                st.write(f"Audio format: {params[0]}")
-                st.write(f"Number of channels: {params[0]}")
-                st.write(f"Sample width: {params[1]}")
-                st.write(f"Frame rate: {params[2]}")
-                st.write(f"Number of frames: {params[3]}")
-        except Exception as e:
-            st.error(f"Error opening WAV file: {e}")
 
 if __name__ == "__main__":
     main()
