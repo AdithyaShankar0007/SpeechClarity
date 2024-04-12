@@ -1,14 +1,69 @@
 import streamlit as st
 import numpy as np
-from backend import recognize_speech
+from pydub import AudioSegment
+from pydub.silence import split_on_silence
+import speech_recognition as sr
+import noisereduce as nr
 from googletrans import Translator
 import os
 
+# Function to reduce noise in audio
+def reduce_noise(audio):
+    # Convert audio to numpy array
+    audio_array = np.array(audio.get_array_of_samples())
+
+    # Perform noise reduction
+    reduced_noise = nr.reduce_noise(audio_array, audio.frame_rate)
+
+    # Convert back to AudioSegment
+    reduced_audio = AudioSegment(
+        reduced_noise.tobytes(), 
+        frame_rate=audio.frame_rate, 
+        sample_width=reduced_noise.dtype.itemsize, 
+        channels=1
+    )
+
+    return reduced_audio
+
+# Function to recognize speech
+def recognize_speech(audio_path, language='en-IN'):
+    # Load audio file and reduce noise
+    audio = AudioSegment.from_file(audio_path)
+    audio = reduce_noise(audio)
+
+    # Language code mapping
+    language_code = {
+        "hindi": "hi-IN",
+        "malayalam": "ml-IN",
+        "english": "en-IN",
+        "tamil": "ta-IN"
+    }
+
+    # Split audio into segments based on silence
+    segments = split_on_silence(audio, silence_thresh=-36)  # Adjust silence threshold as needed
+
+    recognized_text = ''
+    recognizer = sr.Recognizer()
+
+    for segment in segments:
+        with sr.AudioFile(segment.export(format="wav")) as source:
+            audio_data = recognizer.record(source)
+            try:
+                text = recognizer.recognize_google(audio_data, language=language_code[language])
+                recognized_text += text + ' '
+            except sr.UnknownValueError:
+                print("Google Speech Recognition could not understand audio")
+            except sr.RequestError as e:
+                print(f"Could not request results from Google Speech Recognition service; {e}")
+
+    return recognized_text.strip()
+
+# Main function for Streamlit app
 def main():
     st.title("Speech Recognition and Translation App")
 
     # File uploader widget
-    uploaded_file = st.file_uploader("Upload audio file", type=['wav', 'mp3','AIFF'])
+    uploaded_file = st.file_uploader("Upload audio file", type=['wav', 'mp3', 'AIFF'])
 
     # Initialize session state
     if 'recognized_text' not in st.session_state:
