@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 from backend import recognize_speech
 from googletrans import Translator
+import wave
 
 def main():
     st.title("Speech Recognition and Translation App")
@@ -33,6 +34,17 @@ def main():
                 st.write(f"Uploaded file name: {uploaded_file.name}")
                 st.write(f"Uploaded file type: {uploaded_file.type}")
                 st.write(f"Uploaded file size: {uploaded_file.size} bytes")
+
+                # Debug: Inspect audio file format using wave module
+                try:
+                    with wave.open("temp_audio.wav", "rb") as wav_file:
+                        st.write(f"Audio format: {wav_file.getfmt()}")
+                        st.write(f"Number of channels: {wav_file.getnchannels()}")
+                        st.write(f"Sample width: {wav_file.getsampwidth()}")
+                        st.write(f"Frame rate: {wav_file.getframerate()}")
+                        st.write(f"Number of frames: {wav_file.getnframes()}")
+                except Exception as e:
+                    st.error(f"Error opening WAV file: {e}")
 
                 # Call the backend function with selected language
                 recognized_text = recognize_speech("temp_audio.wav", language=language.lower())
