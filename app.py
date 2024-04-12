@@ -20,7 +20,7 @@ def main():
 
         temp_audio_path = "temp_audio.wav"
         # Save the uploaded file to a temporary location
-        with open("temp_audio.wav", "wb") as f:
+        with open("temp_audio", "wb") as f:
             f.write(uploaded_file.read())
 
         # Display the uploaded audio file
@@ -35,7 +35,7 @@ def main():
         if st.button("Transcribe"):
             try:
                 # Call the backend function with selected language
-                recognized_text = recognize_speech("temp_audio.wav", language=language.lower())
+                recognized_text = recognize_speech("temp_audio", language=language.lower())
                 st.session_state.recognized_text = recognized_text
             except Exception as e:
                 st.error(f"Error during transcription: {e}")  # Display error message
