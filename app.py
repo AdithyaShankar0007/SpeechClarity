@@ -23,6 +23,8 @@ def main():
         # Display the uploaded audio file
         st.audio("temp_audio.wav", format="audio/wav")
 
+        st.write(f"Temporary audio file path: {os.path.abspath(temp_audio_path)}")
+
         # Language selection dropdown with options for different languages
         language = st.selectbox("Select language", ["Hindi", "Malayalam", "English", "Tamil"])
 
