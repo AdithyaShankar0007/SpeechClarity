@@ -17,6 +17,8 @@ def main():
         st.session_state.translated_text = None
 
     if uploaded_file is not None:
+
+        temp_audio_path = "temp_audio.wav"
         # Save the uploaded file to a temporary location
         with open("temp_audio.wav", "wb") as f:
             f.write(uploaded_file.read())
