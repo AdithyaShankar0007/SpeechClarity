@@ -3,12 +3,30 @@ from pydub.silence import split_on_silence
 from noisereduce import reduce_noise
 import speech_recognition as sr
 import numpy as np
+import noisereduce as nr
+
+def reduce_noise(audio):
+    # Convert audio to numpy array
+    audio_array = np.array(audio.get_array_of_samples())
+
+    # Perform noise reduction
+    reduced_noise = nr.reduce_noise(audio_array, audio.frame_rate)
+
+    # Convert back to AudioSegment
+    reduced_audio = AudioSegment(
+        reduced_noise.tobytes(), 
+        frame_rate=audio.frame_rate, 
+        sample_width=reduced_noise.dtype.itemsize, 
+        channels=1
+    )
+
+    return reduced_audio
 
 def recognize_speech(audio_path, language='en-IN'):
   # Load audio file and reduce noise
   audio = AudioSegment.from_file(audio_path)
-  # ... (existing noise reduction code)
-
+  
+  audio = reduce_noise(audio)
   # Language code mapping
   language_code = {
     "hindi": "hi-IN",
