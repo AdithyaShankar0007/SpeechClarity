@@ -1,5 +1,4 @@
 import streamlit as st
-import numpy as np
 from backend import recognize_speech
 from googletrans import Translator
 import wave
@@ -30,22 +29,6 @@ def main():
         # Button to trigger transcription
         if st.button("Transcribe"):
             try:
-                # Debug: Print information about the uploaded file
-                st.write(f"Uploaded file name: {uploaded_file.name}")
-                st.write(f"Uploaded file type: {uploaded_file.type}")
-                st.write(f"Uploaded file size: {uploaded_file.size} bytes")
-
-                # Debug: Inspect audio file format using wave module
-                try:
-                    with wave.open("temp_audio.wav", "rb") as wav_file:
-                        st.write(f"Audio format: {wav_file.getfmt()}")
-                        st.write(f"Number of channels: {wav_file.getnchannels()}")
-                        st.write(f"Sample width: {wav_file.getsampwidth()}")
-                        st.write(f"Frame rate: {wav_file.getframerate()}")
-                        st.write(f"Number of frames: {wav_file.getnframes()}")
-                except Exception as e:
-                    st.error(f"Error opening WAV file: {e}")
-
                 # Call the backend function with selected language
                 recognized_text = recognize_speech("temp_audio.wav", language=language.lower())
                 st.session_state.recognized_text = recognized_text
@@ -76,6 +59,20 @@ def main():
     if st.session_state.translated_text is not None:
         st.subheader("Translated Text:")
         st.write(st.session_state.translated_text)
+
+    # Debug: Inspect audio file properties using wave module
+    if uploaded_file is not None:
+        try:
+            with wave.open("temp_audio.wav", "rb") as wav_file:
+                params = wav_file.getparams()
+                st.subheader("Audio File Properties:")
+                st.write(f"Audio format: {params[0]}")
+                st.write(f"Number of channels: {params[0]}")
+                st.write(f"Sample width: {params[1]}")
+                st.write(f"Frame rate: {params[2]}")
+                st.write(f"Number of frames: {params[3]}")
+        except Exception as e:
+            st.error(f"Error opening WAV file: {e}")
 
 if __name__ == "__main__":
     main()
