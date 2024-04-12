@@ -18,13 +18,13 @@ def main():
 
     if uploaded_file is not None:
 
-        temp_audio_path = "temp_audio.wav"
+        temp_audio_path = "temp_audio"
         # Save the uploaded file to a temporary location
         with open("temp_audio", "wb") as f:
             f.write(uploaded_file.read())
 
         # Display the uploaded audio file
-        st.audio("temp_audio.wav", format="audio/wav")
+        st.audio("temp_audio", format="audio/wav")
 
         st.write(f"Temporary audio file path: {os.path.abspath(temp_audio_path)}")
 
