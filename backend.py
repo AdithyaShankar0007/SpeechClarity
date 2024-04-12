@@ -54,7 +54,4 @@ def recognize_speech(audio_path, language='en-IN'):
 
   return recognized_text.strip()
 
-if __name__ == "__main__":
-  audio_path = "new.wav"  # Replace with the path to your audio file
-  recognized_text = recognize_speech(audio_path, language='en-IN')
-  print("Recognized Text:", recognized_text)
+
