@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 from backend import recognize_speech
 from googletrans import Translator
+import os
 
 def main():
     st.title("Speech Recognition and Translation App")
