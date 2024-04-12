@@ -1,10 +1,7 @@
 import streamlit as st
-import os
-from backend import recognize_speech, convert_to_pcm_wav
+import numpy as np
+from backend import recognize_speech
 from googletrans import Translator
-
-# Set the path to the FFmpeg executable
-os.environ["FFMPEG_PATH"] = "/path/to/ffmpeg"
 
 def main():
     st.title("Speech Recognition and Translation App")
@@ -20,14 +17,11 @@ def main():
 
     if uploaded_file is not None:
         # Save the uploaded file to a temporary location
-        with open("temp_audio", "wb") as f:
+        with open("temp_audio.wav", "wb") as f:
             f.write(uploaded_file.read())
 
-        # Convert uploaded file to PCM WAV format
-        pcm_wav_file = convert_to_pcm_wav("temp_audio")
-        
         # Display the uploaded audio file
-        st.audio(pcm_wav_file, format="audio/wav")
+        st.audio("temp_audio.wav", format="audio/wav")
 
         # Language selection dropdown with options for different languages
         language = st.selectbox("Select language", ["Hindi", "Malayalam", "English", "Tamil"])
@@ -36,7 +30,7 @@ def main():
         if st.button("Transcribe"):
             try:
                 # Call the backend function with selected language
-                recognized_text = recognize_speech(pcm_wav_file, language=language.lower())
+                recognized_text = recognize_speech("temp_audio.wav", language=language.lower())
                 st.session_state.recognized_text = recognized_text
             except Exception as e:
                 st.error(f"Error during transcription: {e}")  # Display error message
