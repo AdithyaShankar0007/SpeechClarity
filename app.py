@@ -1,7 +1,10 @@
 import streamlit as st
-import numpy as np
+import os
 from backend import recognize_speech, convert_to_pcm_wav
 from googletrans import Translator
+
+# Set the path to the FFmpeg executable
+os.environ["FFMPEG_PATH"] = "/path/to/ffmpeg"
 
 def main():
     st.title("Speech Recognition and Translation App")
