@@ -7,7 +7,7 @@ def main():
     st.title("Speech Recognition and Translation App")
 
     # File uploader widget
-    uploaded_file = st.file_uploader("Upload audio file", type=['wav', 'mp3', 'flac'])
+    uploaded_file = st.file_uploader("Upload audio file", type=['wav', 'mp3','flac'])
 
     # Initialize session state
     if 'recognized_text' not in st.session_state:
